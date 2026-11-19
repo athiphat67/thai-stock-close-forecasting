@@ -1,0 +1,155 @@
+{
+ "bundle": "task3-v9-deploy",
+ "fitted_at": "2026-11-11T01:02:20+07:00",
+ "git_commit": "6754e5be84a192a3fd25e182f3f54bd0e22b9133",
+ "locked_tag": "v9-prereg (8021a49); v9.2 morning primary huber_lite (no fut_post, no peer_prev)",
+ "train_end": "2026-10-21",
+ "hyperparameters": "2026 picks of the confirm run v9-confirm-20261028-a",
+ "kappa": {
+  "morning": 0.7,
+  "afternoon": 0.5
+ },
+ "models": {
+  "morning/huber_lite/KBANK": {
+   "rows": 2313,
+   "first": "2017-04-10",
+   "last": "2026-10-21",
+   "features": [
+    "spx",
+    "thd",
+    "thb",
+    "n225",
+    "hsi",
+    "on_prev",
+    "id_prev",
+    "range_prev",
+    "vol_prev",
+    "monday",
+    "gap_days",
+    "long_break",
+    "xd",
+    "atc_push"
+   ],
+   "hp": 1000.0
+  },
+  "morning/huber_lite/ADVANC": {
+   "rows": 2310,
+   "first": "2017-04-17",
+   "last": "2026-10-21",
+   "features": [
+    "spx",
+    "thd",
+    "thb",
+    "n225",
+    "hsi",
+    "on_prev",
+    "id_prev",
+    "range_prev",
+    "vol_prev",
+    "monday",
+    "gap_days",
+    "long_break",
+    "xd",
+    "atc_push"
+   ],
+   "hp": 100.0
+  },
+  "morning/ols_atc/KBANK": {
+   "rows": 2313,
+   "first": "2017-04-10",
+   "last": "2026-10-21",
+   "features": [
+    "spx",
+    "thd",
+    "thb",
+    "n225",
+    "hsi",
+    "atc_push"
+   ],
+   "hp": null
+  },
+  "morning/ols_atc/ADVANC": {
+   "rows": 2310,
+   "first": "2017-04-17",
+   "last": "2026-10-21",
+   "features": [
+    "spx",
+    "thd",
+    "thb",
+    "n225",
+    "hsi",
+    "atc_push"
+   ],
+   "hp": null
+  },
+  "afternoon/hgb/pooled": {
+   "rows": 4581,
+   "first": "2017-05-03",
+   "last": "2026-10-21",
+   "features": [
+    "spx",
+    "thd",
+    "thb",
+    "n225",
+    "hsi",
+    "on_prev",
+    "id_prev",
+    "range_prev",
+    "vol_prev",
+    "monday",
+    "gap_days",
+    "long_break",
+    "xd",
+    "atc_push",
+    "r_morning",
+    "jump",
+    "r_last30",
+    "r_last60",
+    "vwap_gap",
+    "range_am",
+    "vol_am",
+    "post_2024",
+    "tick_dir",
+    "is_kbank"
+   ],
+   "hp": {
+    "max_depth": 2,
+    "max_iter": 28
+   }
+  },
+  "afternoon/ols_small/KBANK": {
+   "rows": 2278,
+   "first": "2017-04-07",
+   "last": "2026-09-04",
+   "features": [
+    "r_morning",
+    "r_last30",
+    "peer_am"
+   ],
+   "hp": null
+  },
+  "afternoon/ols_small/ADVANC": {
+   "rows": 2311,
+   "first": "2017-04-12",
+   "last": "2026-10-21",
+   "features": [
+    "r_morning",
+    "r_last30"
+   ],
+   "hp": null
+  }
+ },
+ "feature_store": "data/final_data/task3-v9-deploy-store",
+ "feature_store_sha256": {
+  "afternoon.parquet": "5d76bd02bfdde4cb82c4aad1cea75182299dd6058e62430212d8939417deda1e",
+  "morning.parquet": "627c4983db0bbeaa1a600bc90d58ba59ef3164de6e9abd0211bbb02b1e64dd92"
+ },
+ "models_joblib_sha256": "5c8f0219d585d62199e3de465057f0c8daac957b95783c5c3f74ac022afafbfd",
+ "python": "3.11.15",
+ "versions": {
+  "scikit-learn": "1.9.0",
+  "numpy": "2.4.6",
+  "joblib": "1.5.3"
+ },
+ "checked_against_ladder_train": true
+}

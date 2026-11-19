@@ -1,0 +1,5 @@
+# v9 deploy runtime (Python 3.11). The bundle was fitted with exactly these; joblib files need the same scikit-learn.
+numpy==2.4.6
+pandas==3.0.5
+scikit-learn==1.9.0
+joblib==1.5.3

@@ -1,0 +1,223 @@
+{
+ "walk_forward_new_months": {
+  "afternoon/ADVANC": {
+   "days": 31,
+   "first": "2026-09-07",
+   "last": "2026-10-21",
+   "models_used": {
+    "hgb": 31
+   },
+   "raw": {
+    "rmse": 1.7796987248711615,
+    "mae": 1.4235944762962989,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 4.65115020865573,
+    "mae_vs_no_change_pct": 4.06211138003203
+   },
+   "tick": {
+    "rmse": 1.7597653802562394,
+    "mae": 1.4193548387096775,
+    "exact_hit": 0.1935483870967742,
+    "rmse_vs_no_change_pct": 5.719095841793676,
+    "mae_vs_no_change_pct": 4.347826086956519
+   },
+   "no_change": {
+    "rmse": 1.8665130505147656,
+    "mae": 1.4838709677419355,
+    "exact_hit": 0.16129032258064516
+   }
+  },
+  "afternoon/KBANK": {
+   "days": 31,
+   "first": "2026-09-07",
+   "last": "2026-10-21",
+   "models_used": {
+    "hgb": 31
+   },
+   "raw": {
+    "rmse": 1.4919166759699563,
+    "mae": 1.2533777398101564,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 4.716298675761699,
+    "mae_vs_no_change_pct": 2.8632251647128792
+   },
+   "tick": {
+    "rmse": 1.5657627225176254,
+    "mae": 1.2903225806451613,
+    "exact_hit": 0.16129032258064516,
+    "rmse_vs_no_change_pct": 0.0,
+    "mae_vs_no_change_pct": 0.0
+   },
+   "no_change": {
+    "rmse": 1.5657627225176254,
+    "mae": 1.2903225806451613,
+    "exact_hit": 0.16129032258064516
+   }
+  },
+  "morning/ADVANC": {
+   "days": 31,
+   "first": "2026-09-07",
+   "last": "2026-10-21",
+   "models_used": {
+    "huber_lite": 31
+   },
+   "raw": {
+    "rmse": 3.1961358565208724,
+    "mae": 2.511847310431416,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 7.361205453070852,
+    "mae_vs_no_change_pct": 10.49739468577714
+   },
+   "tick": {
+    "rmse": 3.2478280583759656,
+    "mae": 2.5483870967741935,
+    "exact_hit": 0.16129032258064516,
+    "rmse_vs_no_change_pct": 5.8629264429460815,
+    "mae_vs_no_change_pct": 9.195402298850585
+   },
+   "no_change": {
+    "rmse": 3.4501051877372686,
+    "mae": 2.806451612903226,
+    "exact_hit": 0.06451612903225806
+   }
+  },
+  "morning/KBANK": {
+   "days": 31,
+   "first": "2026-09-07",
+   "last": "2026-10-21",
+   "models_used": {
+    "huber_lite": 31
+   },
+   "raw": {
+    "rmse": 3.435203279581732,
+    "mae": 2.6435607104199703,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": -4.655017636864933,
+    "mae_vs_no_change_pct": -7.829450030288254
+   },
+   "tick": {
+    "rmse": 3.4172239251823564,
+    "mae": 2.6451612903225805,
+    "exact_hit": 0.03225806451612903,
+    "rmse_vs_no_change_pct": -4.10726849405576,
+    "mae_vs_no_change_pct": -7.8947368421052655
+   },
+   "no_change": {
+    "rmse": 3.282406670171613,
+    "mae": 2.4516129032258065,
+    "exact_hit": 0.16129032258064516
+   }
+  }
+ },
+ "confirm_locked": {
+  "afternoon/ADVANC": {
+   "days": 892,
+   "first": "2023-01-03",
+   "last": "2026-09-04",
+   "models_used": {
+    "hgb": 892
+   },
+   "raw": {
+    "rmse": 1.868451334288702,
+    "mae": 1.3729482039292271,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 1.9815223722860709,
+    "mae_vs_no_change_pct": -0.5063436934649612
+   },
+   "tick": {
+    "rmse": 1.9043848388258546,
+    "mae": 1.3688340807174888,
+    "exact_hit": 0.24103139013452915,
+    "rmse_vs_no_change_pct": 0.09645994335151231,
+    "mae_vs_no_change_pct": -0.2051702913418163
+   },
+   "no_change": {
+    "rmse": 1.9062235810122523,
+    "mae": 1.3660313901345291,
+    "exact_hit": 0.24663677130044842
+   }
+  },
+  "afternoon/KBANK": {
+   "days": 892,
+   "first": "2023-01-03",
+   "last": "2026-09-04",
+   "models_used": {
+    "hgb": 892
+   },
+   "raw": {
+    "rmse": 0.9810009884843822,
+    "mae": 0.7030690433478683,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 2.200948335775521,
+    "mae_vs_no_change_pct": -0.6641391117654161
+   },
+   "tick": {
+    "rmse": 1.0014003647807204,
+    "mae": 0.6995515695067265,
+    "exact_hit": 0.27242152466367714,
+    "rmse_vs_no_change_pct": 0.16727081685088407,
+    "mae_vs_no_change_pct": -0.16051364365972098
+   },
+   "no_change": {
+    "rmse": 1.003078221916173,
+    "mae": 0.6984304932735426,
+    "exact_hit": 0.2769058295964126
+   }
+  },
+  "morning/ADVANC": {
+   "days": 887,
+   "first": "2023-01-03",
+   "last": "2026-08-31",
+   "models_used": {
+    "huber": 887
+   },
+   "raw": {
+    "rmse": 3.00284389460807,
+    "mae": 2.084784202334873,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 3.1861857221931356,
+    "mae_vs_no_change_pct": 2.0289490081572437
+   },
+   "tick": {
+    "rmse": 3.015041211360249,
+    "mae": 2.060315670800451,
+    "exact_hit": 0.18602029312288612,
+    "rmse_vs_no_change_pct": 2.792935589925727,
+    "mae_vs_no_change_pct": 3.1788079470198793
+   },
+   "no_change": {
+    "rmse": 3.1016688238224157,
+    "mae": 2.127959413754228,
+    "exact_hit": 0.17023675310033823
+   }
+  },
+  "morning/KBANK": {
+   "days": 886,
+   "first": "2023-01-03",
+   "last": "2026-08-31",
+   "models_used": {
+    "huber": 886
+   },
+   "raw": {
+    "rmse": 1.696448366759369,
+    "mae": 1.195889773074423,
+    "exact_hit": 0.0,
+    "rmse_vs_no_change_pct": 3.3335805415808273,
+    "mae_vs_no_change_pct": 3.015255016573115
+   },
+   "tick": {
+    "rmse": 1.6981599389720543,
+    "mae": 1.182844243792325,
+    "exact_hit": 0.1636568848758465,
+    "rmse_vs_no_change_pct": 3.2360523404951325,
+    "mae_vs_no_change_pct": 4.073226544622422
+   },
+   "no_change": {
+    "rmse": 1.754951074286032,
+    "mae": 1.2330699774266365,
+    "exact_hit": 0.1580135440180587
+   }
+  }
+ },
+ "note": "RMSE is the main metric, MAE second; prices in baht; tick = rounded to the SET price spread"
+}

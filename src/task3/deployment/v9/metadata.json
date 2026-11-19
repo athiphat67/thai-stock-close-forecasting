@@ -1,0 +1,119 @@
+{
+  "bundle_id": "task3-v9-two-session-closes-metadata-20261108",
+  "version": "v9",
+  "locked_tag": "v9-prereg (8021a49, pushed 2026-10-28)",
+  "status": "fitted models are in bundle/models.joblib (trained on data to 2026-10-21, morning Huber to 2026-08-31 (no futures after 08-28); daily bars after 2026-09-04 built from MT5 1m; see bundle/manifest.json); predict.py scores a request; the weekly fit (02_PROTOCOL section 1) should rerun build_data.py then fit.py on data up to the last trading day before the prediction week.",
+  "timezone": "Asia/Bangkok",
+  "symbols": ["KBANK", "ADVANC"],
+  "graded_live_days": "2026-11-09 to 2026-11-13, 2 stocks x 2 rounds every day = 20 predictions, each saved with a timestamp before its cutoff",
+
+  "uses_volume": {
+    "answer": "yes, both v9 models use volume",
+    "morning_huber": ["vol_prev"],
+    "afternoon_hgb": ["vol_prev", "vol_am", "vwap_gap"],
+    "fallbacks": "neither fallback uses volume",
+    "older_bundles": "v5 and v5.3 (the JSON files next to this one) use no volume; volatility_20d and realized_volatility_per_bar are price volatility",
+    "units_warning": "every volume feature is a ratio to the 20-day mean of the same series, so units cancel, but the 20 history days and today must come from the SAME source and unit (shares, not lots). Do not mix MT5/SET official volume for history with Oanor volume_delta for today."
+  },
+
+  "rounds": {
+    "morning": {
+      "cutoff": "09:30",
+      "target": "P_d = close of the last morning 1m bar with bar_end <= 12:30 on day d",
+      "anchor": "anchor_m = C_{d-1} - D_d (yesterday official close minus today's XD dividend, 0 if none)",
+      "model_y": "y_m = log(P_d / anchor_m)",
+      "prediction": "P_hat = anchor_m * exp(y_hat)",
+      "picked_model": {
+        "kind": "HuberRegressor(epsilon=1.35, alpha=<yearly pick>, max_iter=2000), sklearn",
+        "per_stock": true,
+        "alpha_2026": {"KBANK": 1000.0, "ADVANC": 100.0},
+        "features": {
+          "KBANK": ["spx", "thd", "thb", "n225", "hsi", "fut_post", "on_prev", "id_prev", "range_prev", "vol_prev", "peer_prev", "monday", "gap_days", "long_break", "xd", "atc_push"],
+          "ADVANC": ["spx", "thd", "thb", "n225", "hsi", "fut_post", "on_prev", "id_prev", "range_prev", "vol_prev", "monday", "gap_days", "long_break", "xd", "atc_push"]
+        },
+        "confirm_skill": "+6.43% vs baseline (2023-01 to 2026-09-04)"
+      },
+      "fallback": {
+        "spec": "ols_atc (OLS + intercept, per stock)",
+        "features": ["spx", "thd", "thb", "n225", "hsi", "atc_push"],
+        "prediction": "P_hat = anchor_m * exp(0.7 * y_hat_ols)",
+        "use_when": "fut_post or a peer close is missing, so the Huber row is incomplete"
+      }
+    },
+    "afternoon": {
+      "cutoff": "13:00",
+      "target": "C_d = official close of day d",
+      "anchor": "P_d (the morning close above)",
+      "model_y": "y_a = log(C_d / P_d)",
+      "prediction": "C_hat = P_d * exp(y_hat)",
+      "picked_model": {
+        "kind": "HistGradientBoostingRegressor(learning_rate=0.05, min_samples_leaf=50, l2_regularization=1.0, max_depth=<yearly pick>, max_iter=<mean best iteration>, early_stopping=False), sklearn",
+        "per_stock": false,
+        "pooled_note": "one model for both stocks, extra column is_kbank (1 KBANK, 0 ADVANC)",
+        "hp_2026": {"max_depth": 2, "max_iter": 28},
+        "features": ["spx", "thd", "thb", "n225", "hsi", "on_prev", "id_prev", "range_prev", "vol_prev", "monday", "gap_days", "long_break", "xd", "atc_push", "r_morning", "jump", "r_last30", "r_last60", "vwap_gap", "range_am", "vol_am", "post_2024", "tick_dir", "is_kbank"],
+        "confirm_skill": "+4.12% vs baseline (2023-01 to 2026-09-04), shrinking each year"
+      },
+      "fallback": {
+        "spec": "ols_small (OLS + intercept, per stock)",
+        "features": {"KBANK": ["r_morning", "r_last30", "peer_am"], "ADVANC": ["r_morning", "r_last30"]},
+        "prediction": "C_hat = P_d * exp(0.5 * y_hat_ols)"
+      }
+    }
+  },
+
+  "training_rules": {
+    "window": "expanding from 2017-04-01, refit weekly on rows dated before the week's first day (last fit before the graded week: after the close of Fri 2026-11-06)",
+    "clip": "each feature clipped at the training window's 1% / 99% quantiles; the same bounds are applied to the live row",
+    "standardise": "Huber only: z-score with the training window's clipped mean / SD",
+    "missing": "training rows with any missing feature are dropped",
+    "min_history": "at least 120 training days",
+    "code": "src/task3/versions9/ladder.py (train, walk) and features.py (build)"
+  },
+
+  "features": {
+    "spx":        {"formula": "log(last ^GSPC close dated <= d-1 / last close dated <= prev_day-1)", "source": "Yahoo ^GSPC daily", "known_at": "16:00 New York", "volume": false},
+    "thd":        {"formula": "same as spx on THD (iShares Thailand ETF)", "source": "Yahoo THD daily", "known_at": "16:00 New York", "volume": false},
+    "thb":        {"formula": "same as spx on THB=X; use each bar's own London date", "source": "Yahoo THB=X daily", "known_at": "23:59 London", "volume": false},
+    "n225":       {"formula": "log(Nikkei open on d / last close dated <= prev_day); 0 if Tokyo shut on d", "source": "Yahoo ^N225", "known_at": "09:00 Tokyo = 07:00 BKK", "volume": false},
+    "hsi":        {"formula": "log(Hang Seng open on d / last close dated <= prev_day); 0 if HK shut on d", "source": "Yahoo ^HSI", "known_at": "09:30 HK = 08:30 BKK", "volume": false},
+    "fut_post":   {"formula": "log(fut_1655 / fut_1645) on prev_day: fut_1645 = close of the S50 front-month 30m bar starting 16:15, fut_1655 = close of the bar starting 16:45 (TFEX closes 16:55)", "source": "TFEX S50 futures 30m (TradingView S501!)", "known_at": "17:15 prev_day", "volume": false, "morning_only": true},
+    "on_prev":    {"formula": "log(O_{d-1} / (C_{d-2} - D_{d-1}))", "source": "official daily OHLCV", "volume": false},
+    "id_prev":    {"formula": "log(C_{d-1} / O_{d-1})", "source": "official daily OHLCV", "volume": false},
+    "range_prev": {"formula": "log(H_{d-1} / L_{d-1})", "source": "official daily OHLCV", "volume": false},
+    "vol_prev":   {"formula": "log(V_{d-1} / mean(V over the 20 days ending d-1)), needs >= 15 of 20", "source": "official daily VOLUME", "volume": true},
+    "peer_prev":  {"formula": "mean over BBL, KTB, SCB, TTB, KKP, TISCO of log(ATC close_{d-1} / ATC close_{d-2})", "source": "1m bars of the 6 banks, session closing_label", "volume": false, "only": "KBANK morning Huber"},
+    "monday":     {"formula": "1 if d is Monday else 0", "volume": false},
+    "gap_days":   {"formula": "calendar days from prev SET day to d", "source": "SET trading calendar", "volume": false},
+    "long_break": {"formula": "1 if gap_days >= 4 else 0", "volume": false},
+    "xd":         {"formula": "D_d / C_{d-1} (dividend going XD today, 0 if none)", "source": "XD ledger (SET announcement)", "volume": false},
+    "atc_push":   {"formula": "log(C_{d-1} / last afternoon continuous 1m close on d-1)", "source": "official close + 1m bars", "volume": false},
+    "r_morning":  {"formula": "log(P_d / anchor_m)", "source": "1m bars to 12:30", "volume": false},
+    "jump":       {"formula": "log(first morning 1m open on d / anchor_m)", "source": "1m bars", "volume": false},
+    "r_last30":   {"formula": "log(P_d / last 1m close with bar_end <= 12:00)", "source": "1m bars", "volume": false},
+    "r_last60":   {"formula": "log(P_d / last 1m close with bar_end <= 11:30)", "source": "1m bars", "volume": false},
+    "vwap_gap":   {"formula": "log(P_d / morning VWAP), VWAP = sum(close*volume)/sum(volume) over morning 1m bars", "source": "1m bars incl. VOLUME", "volume": true},
+    "range_am":   {"formula": "log(max morning high / min morning low)", "source": "1m bars", "volume": false},
+    "vol_am":     {"formula": "log(morning volume on d / mean morning volume of the 20 days before d), needs >= 15", "source": "1m bars VOLUME", "volume": true},
+    "post_2024":  {"formula": "1 if d >= 2024-03-25 (afternoon opens 14:00) else 0; always 1 live", "volume": false},
+    "tick_dir":   {"formula": "sign of the last price change among morning 1m closes (repeated prices removed), 0 if none", "source": "1m bars", "volume": false},
+    "is_kbank":   {"formula": "1 for KBANK, 0 for ADVANC", "volume": false}
+  },
+
+  "live_inputs_needed": {
+    "KBANK_ADVANC_1m_ohlcv": {"for": "both rounds", "by": "12:30 (afternoon) / previous day (morning)", "notes": "true 1m OHLCV incl. volume; morning bars 09:56-12:30 bar_end; bars labelled by END time (MT5 labels by start, +1 min)"},
+    "KBANK_ADVANC_official_daily_ohlcv": {"for": "both rounds", "by": "17:00 previous day", "notes": "official close C, open, high, low and VOLUME; last 21 days at least"},
+    "bank_peers_1m_or_atc_close": {"symbols": ["BBL", "KTB", "SCB", "TTB", "KKP", "TISCO"], "for": "KBANK morning only", "notes": "only the ATC (closing auction) price of the last 2 days is needed"},
+    "s50_futures_30m": {"for": "morning only (fut_post)", "notes": "the 16:45 bar of the previous day; without it the morning uses the fallback"},
+    "yahoo_daily": {"symbols": ["^GSPC", "THD", "THB=X", "^N225", "^HSI"], "for": "both rounds", "notes": "N225 and HSI opens of today must be in before 09:30 BKK"},
+    "xd_dividends": {"for": "both rounds", "notes": "any XD date and THB amount for today"},
+    "set_calendar": {"for": "both rounds", "notes": "previous trading day and gap length"}
+  },
+
+  "oanor_feed_gaps": [
+    "only ADVANC and KBANK: no bank peers, no S50 futures, no Yahoo",
+    "polling snapshots, not exchange 1m OHLCV: jump, range_am, tick_dir, vwap_gap will differ from training",
+    "volume_delta comes from cumulative volume; history must use the same source for vol_am / vwap_gap ratios",
+    "no official close or ATC price flagged"
+  ]
+}

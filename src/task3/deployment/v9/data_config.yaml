@@ -1,0 +1,20 @@
+# v9 deploy data config: the v8 M1 config with the date block opened and two sources extended (build_data.py).
+blocked_from: 2099-12-31      # owner opened the v8 window for the v9 deploy refit (2026-11-09); v8 itself keeps 2026-09-05
+last_origin: 2026-10-21       # last day of the MT5 export of 2026-10-21
+symbols: [KBANK, ADVANC]
+deltas: [1, 5, 10, 15, 30]    # K13
+afternoon_open_change: 2024-03-25   # first day with an 'intermission' session; afternoon opens 14:00 instead of 14:30
+store: data/final_data/task3-v8-feature-store
+sources:
+  one_min_main: data/final_data/task3-v9-deploy-data/1m          # KBANK/ADVANC from the 2026-10-21 MT5 export, peers as in v8
+  one_min_peers: data/raw/data_tertiary_1-5M/1m                         # S8, files run to 2026-09-10
+  official_daily: data/final_data/task3-v9-deploy-data/official  # v5 snapshot + daily bars built from MT5 1m after 2026-09-04
+  calendar: data/raw/validation/task3-v5-validate-20260909/trading_calendar.json   # S3, 2021-01-04 on
+  ledger: src/task3/versions7/registries/xd_ledger.csv                  # S4 (read as data only)
+  setsmart: data/processed/setsmart_historical_trading/20260829T160000000000Z    # S5, parsed from the raw .xlsx
+  futures: data/final_data/task3-v8-set-export                          # S6
+peers_main: [BBL, KTB, SCB, "TRUE", TTB]   # quoted: bare TRUE is a YAML boolean
+peers_tertiary: [BDMS, CPALL, CPN, IVL, KKP, MINT, PTT, PTTEP, SCC, TISCO, TU]
+# L08 closed 2026-10-20 (DECISIONS): after the closing auction at T3 (16:35-16:40) SET runs no more order matching
+# (off-hour is Trade Report only) and close is at bid or offer on every day, so the residual book is known at cutoff A.
+orderbook_known_at_close: true
